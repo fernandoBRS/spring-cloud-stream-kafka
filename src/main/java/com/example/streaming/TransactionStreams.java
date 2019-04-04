@@ -1,4 +1,4 @@
-package com.example.kafkalogging;
+package com.example.streaming;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;

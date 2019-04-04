@@ -1,4 +1,11 @@
-package com.example.kafkalogging;
+package com.example.streaming;
+
+import java.util.Optional;
+
+import com.example.streaming.avro.messages.headers.HeaderConfig;
+import com.example.streaming.avro.messages.headers.Headers;
+import com.example.streaming.avro.serializers.AvroSerializer;
+import com.example.streaming.models.ValidationCompleted;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,17 +24,21 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 	
-	// Receive incoming messages of type Person
-	// It tries to automatically convert incoming message payloads to type Person
+	// Receive incoming messages
 	@StreamListener(TransactionStreams.INPUT)
       public void process(Message<byte[]> message) {
 		try {
-			System.out.println("Received: " + message.getPayload());
+			Headers headers = AvroSerializer.deserializeHeaders(message.getPayload());
+			Optional<String> transactionId = headers.get(HeaderConfig.TransactionId);
+			
+			System.out.println("Received transaction id: " + transactionId.get());
+
+			// ValidationCompleted event = AvroSerializer.deserializePayload(message.getPayload());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-
+		
 		commit(message);
 	}
 	
