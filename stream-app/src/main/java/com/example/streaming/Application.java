@@ -15,6 +15,7 @@ import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 
 @SpringBootApplication
 @EnableBinding(Sink.class)
@@ -43,6 +44,7 @@ public class Application {
 	}
 	
 	private void commit(Message<byte[]> message) {
+		MessageHeaders test = message.getHeaders();
 		Acknowledgment acknowledgment = message.getHeaders().get(KafkaHeaders.ACKNOWLEDGMENT, Acknowledgment.class);
 		
 		if (acknowledgment != null) {
